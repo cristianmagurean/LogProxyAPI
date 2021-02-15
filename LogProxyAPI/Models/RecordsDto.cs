@@ -6,6 +6,6 @@ namespace LogProxyAPI.Models
     {    
         public string id { get; set; }
         public FieldsDTO fields { get; set; }
-        public DateTime createdTime { get; set; }
+        public string createdTime { get; set; }
     }
 }

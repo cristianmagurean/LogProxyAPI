@@ -12,7 +12,7 @@ namespace LogProxyAPI.Mappers
                 .ForPath(dest => dest.Id, act => act.MapFrom(src => src.fields.id ?? string.Empty))
                 .ForPath(dest => dest.Title, act => act.MapFrom(src => src.fields.Summary))
                 .ForPath(dest => dest.Text, act => act.MapFrom(src => src.fields.Message))
-                .ForPath(dest => dest.ReceivedAt, act => act.MapFrom(src => src.fields.receivedAt));       
+                .ForPath(dest => dest.ReceivedAt, act => act.MapFrom(src => src.fields.receivedAt ?? string.Empty));       
 
             CreateMap<Message, SaveRecordsDTO>()
                 .ForPath(dest => dest.fields.id, act => act.MapFrom(src => src.Id))

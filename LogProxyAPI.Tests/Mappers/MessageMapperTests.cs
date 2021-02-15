@@ -52,8 +52,8 @@ namespace LogProxyAPI.Tests.Mappers
             var record = new RecordsDTO() 
             { 
                 id = "1", 
-                fields = new FieldsDTO() { id = "1", Message = "message", receivedAt = DateTime.Now }, 
-                createdTime = DateTime.Now
+                fields = new FieldsDTO() { id = "1", Message = "message", receivedAt = DateTime.Now.ToString() }, 
+                createdTime = DateTime.Now.ToString()
             };
 
             // Act

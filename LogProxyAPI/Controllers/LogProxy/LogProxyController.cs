@@ -1,8 +1,7 @@
-﻿using AutoMapper;
-using LogProxyAPI.CQRS;
+﻿using LogProxyAPI.CQRS;
 using LogProxyAPI.Entities;
-using LogProxyAPI.Interfaces;
 using LogProxyAPI.Models;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -15,32 +14,26 @@ namespace LogProxyAPI.Controllers
     [ApiController]
     [Route("[controller]")]
     public class LogProxyController : ControllerBase
-    {     
-        private readonly IAirTableService _airTableService;
-        private readonly IMapper _mapper;
+    {
+        private readonly IMediator _mediator;      
 
-        public LogProxyController(IAirTableService airTableService, IMapper mapper)
-        {          
-            _airTableService = airTableService;
-            _mapper = mapper;
+        public LogProxyController(IMediator mediator)
+        {
+            _mediator = mediator;         
         }
 
         [HttpGet("messages")]
         [ProducesResponseType(typeof(IEnumerable<Message>), (int)HttpStatusCode.OK)]
         public async Task<ActionResult<IEnumerable<Message>>> GetMessages()
-        {
-            return Ok(await new GetMessagesQuery(_airTableService, _mapper).Execute());
+        {           
+            return Ok(await _mediator.Send(new GetMessagesQuery()));
         }       
 
         [HttpPost("messages")]
         [ProducesResponseType(typeof(SaveResponseDTO), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<SaveResponseDTO>> SaveMessage([FromBody] SaveRequestDTO request)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-            return Ok(await new SaveMessageCommand(_airTableService, _mapper).Execute(request));            
+        public async Task<ActionResult<SaveResponseDTO>> SaveMessage([FromBody] SaveMessageCommand request)
+        {            
+            return Ok(await _mediator.Send(new SaveMessageCommand(request.Title, request.Text)));            
         }        
     }
 }

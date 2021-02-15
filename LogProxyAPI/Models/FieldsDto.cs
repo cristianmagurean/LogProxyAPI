@@ -12,6 +12,6 @@ namespace LogProxyAPI.Models
         [Required]
         public string Message { get; set; }
         [Required]
-        public DateTime receivedAt { get; set; }
+        public string receivedAt { get; set; }
     }
 }

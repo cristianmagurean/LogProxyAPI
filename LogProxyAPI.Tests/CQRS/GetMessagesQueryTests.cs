@@ -1,13 +1,14 @@
-﻿using AutoMapper;
-using LogProxyAPI.CQRS;
-using LogProxyAPI.Interfaces;
-using LogProxyAPI.Mappers;
-using LogProxyAPI.Models;
+﻿using LogProxyAPI.Interfaces;
 using NSubstitute;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
+using LogProxyAPI.Models;
+using System.Collections.Generic;
+using LogProxyAPI.CQRS;
+using NSubstitute.ReceivedExtensions;
+using AutoMapper;
+using LogProxyAPI.Mappers;
 using Xunit;
 
 namespace LogProxyAPI.Tests.CQRS
@@ -17,30 +18,37 @@ namespace LogProxyAPI.Tests.CQRS
         [Fact]
         public async Task GetMessages_WhenCalled_ReturnsAllItems()
         {
-            //Arrange
-            var service = Substitute.For<IAirTableService>();
+            // Arrange            
+            var airTableService = Substitute.For<IAirTableService>();
             var mapperConfiguration = new MapperConfiguration(cfg =>
             {
                 cfg.AddProfile<MessageMapper>();
             });
 
             IMapper mapper = mapperConfiguration.CreateMapper();
-            service.GetMessagesAsync().Returns(
-              new AirTableGetResponseDTO()
-              {
-                  records = new List<RecordsDTO>()
+
+            var command = new GetMessagesQuery();
+            var handler = new GetMessagesQuery.GetMessagesQueryHandler(airTableService, mapper);                   
+
+            var response = new AirTableGetResponseDTO()
+            {
+                records = new List<RecordsDTO>()
                   {
-                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="1", Message = "Message", receivedAt = DateTime.Now } },
-                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="2", Message = "Message", receivedAt = DateTime.Now } },
-                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="3", Message = "Message", receivedAt = DateTime.Now } }
+                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="1", Message = "Message", receivedAt = DateTime.Now.ToString() } },
+                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="2", Message = "Message", receivedAt = DateTime.Now.ToString() } },
+                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="3", Message = "Message", receivedAt = DateTime.Now.ToString() } }
                   }
-              });
+            };
+
+            airTableService.GetMessagesAsync().Returns(response);
 
             // Act
-            var result = await new GetMessagesQuery(service, mapper).Execute();
+            var result = handler.Handle(command, new System.Threading.CancellationToken());
 
-            // Assert            
-            Assert.Equal(3, result.Count());
+            // Assert
+            await airTableService.Received(Quantity.AtLeastOne()).GetMessagesAsync();
+            result.Should().NotBeNull();
+            result.Result.Should().HaveCount(3);
         }
     }
 }

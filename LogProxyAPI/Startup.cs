@@ -11,6 +11,9 @@ using NSwag;
 using System.Linq;
 using AutoMapper;
 using LogProxyAPI.Mappers;
+using System.Reflection;
+using Lamar;
+using MediatR;
 
 namespace LogProxyAPI
 {
@@ -23,11 +26,15 @@ namespace LogProxyAPI
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureContainer(ServiceRegistry services)
+        {
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+        }
+      
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddHttpClient();
+            services.AddHttpClient();           
 
             services.AddAuthentication("BasicAuthentication")
                .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
@@ -58,8 +65,7 @@ namespace LogProxyAPI
             });
            
         }
-
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
