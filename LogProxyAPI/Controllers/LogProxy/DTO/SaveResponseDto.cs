@@ -1,9 +1,7 @@
-﻿using System;
+﻿using LogProxyAPI.Models;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace LogProxyAPI.Models
+namespace LogProxyAPI.Controllers.LogProxy.DTO
 {
     public class SaveResponseDTO
     {

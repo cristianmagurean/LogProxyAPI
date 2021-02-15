@@ -4,6 +4,7 @@ using LogProxyAPI.Interfaces;
 using LogProxyAPI.Models;
 using MediatR;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +31,7 @@ namespace LogProxyAPI.CQRS
             {
                 List<Message> messages = new List<Message>();
                 var response = await _airTableService.GetMessagesAsync();
-                messages.AddRange(_mapper.Map<List<RecordsDTO>, List<Message>>(response.records));
+                messages.AddRange(_mapper.Map<IEnumerable<RecordsDTO>, List<Message>>(response.records.Where(r => !string.IsNullOrEmpty(r.fields.id))));
                 return messages;
             }
         }

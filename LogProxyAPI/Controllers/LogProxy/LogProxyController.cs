@@ -1,6 +1,6 @@
-﻿using LogProxyAPI.CQRS;
+﻿using LogProxyAPI.Controllers.LogProxy.DTO;
+using LogProxyAPI.CQRS;
 using LogProxyAPI.Entities;
-using LogProxyAPI.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +31,7 @@ namespace LogProxyAPI.Controllers
 
         [HttpPost("messages")]
         [ProducesResponseType(typeof(SaveResponseDTO), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<SaveResponseDTO>> SaveMessage([FromBody] SaveMessageCommand request)
+        public async Task<ActionResult<SaveResponseDTO>> SaveMessage([FromBody] SaveRequestDto request)
         {            
             return Ok(await _mediator.Send(new SaveMessageCommand(request.Title, request.Text)));            
         }        

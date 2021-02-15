@@ -28,23 +28,21 @@ namespace LogProxyAPI.Tests.CQRS
             IMapper mapper = mapperConfiguration.CreateMapper();
             var command = new SaveMessageCommand("text", "title");
             var handler = new SaveMessageCommand.SaveMessageCommandHandler(airTableService, mapper);
-        
-            airTableService.SaveMessageAsync(Arg.Any<AirTableSaveRequestDTO>()).Returns(
-              new AirTableSaveResponseDTO()
-              {
-                  records = new List<RecordsDTO>()
-                  {
-                      new RecordsDTO() {id= "recCR2LP7wZVioc5H", fields = new FieldsDTO() {  id="1", Message = "Message", receivedAt = DateTime.Now.ToString() } }
-                  }
-              });
+
+            var records = new RecordsDTO() { id = "recCR2LP7wZVioc5H", fields = new FieldsDTO() { id = "1", Message = "Message", receivedAt = DateTime.Now.ToString() } };
+                  
+            airTableService.SaveMessageAsync(Arg.Any<AirTableSaveRequestDTO>()).Returns(new AirTableSaveResponseDTO() { records = new List<RecordsDTO>() { records } });
 
             // Act
-            var result = handler.Handle(command, new System.Threading.CancellationToken());
+            var result = await handler.Handle(command, new System.Threading.CancellationToken());
 
             // Assert            
             await airTableService.Received(Quantity.AtLeastOne()).SaveMessageAsync(Arg.Any<AirTableSaveRequestDTO>());
             result.Should().NotBeNull();
-            //result.Result.Should().HaveCount(1);
+            result.records.Should().HaveCount(1);
+            result.records.Should().Equals(records);
+            result.records[0].fields.Message.Should().Equals("text");
+            result.records[0].fields.Summary.Should().Equals("title");
         }
     }
 }
