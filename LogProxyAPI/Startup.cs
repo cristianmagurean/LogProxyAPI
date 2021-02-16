@@ -14,6 +14,10 @@ using LogProxyAPI.Mappers;
 using System.Reflection;
 using Lamar;
 using MediatR;
+using LogProxyAPI.Behaviors;
+using LogProxyAPI.CQRS;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace LogProxyAPI
 {
@@ -29,8 +33,12 @@ namespace LogProxyAPI
         public void ConfigureContainer(ServiceRegistry services)
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
-        }
-      
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+
+            services.TryAddTransient<IValidator<SaveMessageCommand>, SaveMessageCommandValidator>();
+        }       
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
@@ -63,7 +71,7 @@ namespace LogProxyAPI
                     Description = "Provide Basic Authentication"
                 });
             });
-           
+
         }
         
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
