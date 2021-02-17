@@ -1,0 +1,11 @@
+version: '3.4'
+
+services:
+  logproxyapi:
+    image: ${DOCKER_REGISTRY-}logproxyapi  
+    ports:
+      - 54411:80
+      
+    build:
+      context: .
+      dockerfile: LogProxyAPI/Dockerfile_release

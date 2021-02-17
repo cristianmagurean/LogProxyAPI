@@ -9,7 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F940839D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{2FBD3096-3657-4588-A38B-E0E09105760B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LogProxyAPI.Tests", "LogProxyAPI.Tests\LogProxyAPI.Tests.csproj", "{3021DBF2-BCBF-40EA-B027-F4E002789222}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LogProxyAPI.Tests", "LogProxyAPI.Tests\LogProxyAPI.Tests.csproj", "{3021DBF2-BCBF-40EA-B027-F4E002789222}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D24DAF06-CFD4-4994-A81A-B36EEE715439}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0E9E5C54-1991-42A4-86A1-9BFDD3226D8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +29,10 @@ Global
 		{3021DBF2-BCBF-40EA-B027-F4E002789222}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3021DBF2-BCBF-40EA-B027-F4E002789222}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3021DBF2-BCBF-40EA-B027-F4E002789222}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D24DAF06-CFD4-4994-A81A-B36EEE715439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D24DAF06-CFD4-4994-A81A-B36EEE715439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D24DAF06-CFD4-4994-A81A-B36EEE715439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D24DAF06-CFD4-4994-A81A-B36EEE715439}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

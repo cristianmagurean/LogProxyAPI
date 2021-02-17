@@ -18,6 +18,7 @@ using LogProxyAPI.Behaviors;
 using LogProxyAPI.CQRS;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LogProxyAPI
 {
@@ -45,7 +46,12 @@ namespace LogProxyAPI
             services.AddHttpClient();           
 
             services.AddAuthentication("BasicAuthentication")
-               .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+               .AddScheme<AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", options => { });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("BasicAuthentication", new AuthorizationPolicyBuilder("BasicAuthentication").RequireAuthenticatedUser().Build());
+            });
 
             services.AddTransient<IAirTableService, AirTableService>();
             services.AddScoped<IUserService, UserService>();
